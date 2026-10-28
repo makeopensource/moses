@@ -9,4 +9,5 @@ target_sources(moses-core
         emu.c
         mem.c
         cpu.c
+        rom_parser.c
 )

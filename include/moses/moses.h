@@ -10,3 +10,4 @@
 #include <moses/cpu.h>
 #include <moses/nes.h>
 #include <moses/apu.h>
+#include <moses/rom_parser.h>

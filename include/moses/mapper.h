@@ -15,8 +15,8 @@
 		- whatever else you can think of 
 */
 
+#include "moses/rom_parser.h"
 #include <stdint.h>
-#include <stdio.h>
 
 enum MapperID {
 	MAPPER_NROM,
@@ -39,11 +39,17 @@ struct MapperVTable {
 };
 
 // Hold the method vtable and common properties of all mappers
+// Any mappers MUST keep this struct as their first member.
 struct MapperBase {
+	// Keep this pointer first to allow "downcasting" slice to MapperBase.
 	MapperVTable const * vtable;
+	void const * rom_buffer;
+	RomDescriptor rd;
 };
 
-MapperBase * mapper_create_from_rom_filepath(FILE * filepath);
+// This combines the steps of creating a RomDescriptor struct
+// from an .nes file, and associating it to a Mapper.
+MapperBase * mapper_create_from_rom_buffer(void * buffer);
 
 void mapper_delete(MapperBase * mapper);
 
@@ -52,8 +58,6 @@ An example derivation of MapperBase:
 
 	struct Mapper_01 {
 		MapperBase base;
-		void * mmapped_nes_rom;
-		enum CartFormat format;
 		uint8_t PRG_ROM_index;
 		uint8_t CHR_ROM_index;
 	};
